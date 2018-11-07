@@ -1,15 +1,20 @@
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        modifyMP3sAlbumToDirNameByDir("./music", "./output");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("輸入資料夾名稱:");
+        String srcDir = sc.nextLine();
+        modifyMP3sAlbumToDirNameByDir(srcDir, "./output");
 
     }
 
     public static void modifyMP3sAlbumToDirNameByDir(String srcDir, String destDir) {
+        srcDir = checkSrcDir(srcDir);
         File[] listOfFiles = getFolderFiles(srcDir);
 
         for(File file : listOfFiles) {
@@ -20,6 +25,13 @@ public class Main {
                 mp3.save(destDir);
             }
         }
+    }
+
+    public static String checkSrcDir(String srcDir){
+        if(srcDir.equals("")){
+            srcDir = "./music";
+        }
+        return srcDir;
     }
 
     public static File[] getFolderFiles(String dirName) {
