@@ -1,23 +1,23 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) {
-        modifyMP3sAlbumToDirNameByDir("./music");
+        modifyMP3sAlbumToDirNameByDir("./music", "./output");
 
     }
 
-    public static void modifyMP3sAlbumToDirNameByDir(String dir) {
-        File[] listOfFiles = getFolderFiles("./music/");
+    public static void modifyMP3sAlbumToDirNameByDir(String srcDir, String destDir) {
+        File[] listOfFiles = getFolderFiles(srcDir);
 
         for(File file : listOfFiles) {
             if(isMP3(file)) {
                 MP3File mp3 = new MP3File(file);
-                mp3.setAlbum("阿誠");
-                mp3.save();
+                String dirName = getDirName(srcDir);
+                mp3.setAlbum_(dirName);
+                mp3.save(destDir);
             }
         }
     }
@@ -42,103 +42,108 @@ public class Main {
         int endIndex = file.getName().length();
         return  file.getName().substring(startIndex, endIndex);
     }
+
+    public static String getDirName(String srcDir){
+        File file = new File(srcDir);
+        return file.getName();
+    }
 }
 
 class MP3File {
     //TAGBody 是 MP3 預留的最後128個byte，詳細資訊
     private byte[] TAGBody;
-    private String Tag;
-    private String SongName;
-    private String Artist;
-    private String Album;
-    private String Year;
-    private String Comment;
-    private String Genre;
-    private File file;
+    private String Tag_;
+    private String SongName_;
+    private String Artist_;
+    private String Album_;
+    private String Year_;
+    private String Comment_;
+    private String Genre_;
+    private File file_;
 
-    private static final int Tag_Start = 0;
-    private static final int Tag_End = 3;
-    private static final int SongName_Start = 3;
-    private static final int SongName_End = 33;
-    private static final int Artist_Start = 33;
-    private static final int Artist_End = 63;
-    private static final int Album_Start = 63;
-    private static final int Album_End = 93;
-    private static final int Year_Start = 93;
-    private static final int Year_End = 97;
-    private static final int Comment_Start = 97;
-    private static final int Comment_End = 127;
-    private static final int Genre_Start = 127;
-    private static final int Genre_End = 128;
+    private static final int TAG_START = 0;
+    private static final int TAG_END = 3;
+    private static final int SONG_NAME_START = 3;
+    private static final int SONG_NAME_END = 33;
+    private static final int ARTIST_START = 33;
+    private static final int ARTIST_END = 63;
+    private static final int ALBUM_START = 63;
+    private static final int ALBUM_END = 93;
+    private static final int YEAR_START = 93;
+    private static final int YEAR_END = 97;
+    private static final int COMMENT_START = 97;
+    private static final int COMMENT_END = 127;
+    private static final int GENRE_START = 127;
+    private static final int GENRE_END = 128;
 
-    public String getTag() {
-        return Tag;
+    public String getTag_() {
+        return Tag_;
     }
 
-    public void setTag(String tag) {
-        Tag = tag;
+    public void setTag_(String tag_) {
+        Tag_ = tag_;
     }
 
-    public String getSongName() {
-        return SongName;
+    public String getSongName_() {
+        return SongName_;
     }
 
-    public void setSongName(String songName) {
-        SongName = songName;
+    public void setSongName_(String songName_) {
+        SongName_ = songName_;
     }
 
-    public String getArtist() {
-        return Artist;
+    public String getArtist_() {
+        return Artist_;
     }
 
-    public void setArtist(String artist) {
-        Artist = artist;
+    public void setArtist_(String artist_) {
+        Artist_ = artist_;
     }
 
-    public String getAlbum() {
-        return Album;
+    public String getAlbum_() {
+        return Album_;
     }
 
-    public void setAlbum(String album) {
-        Album = album;
+    public void setAlbum_(String album_) {
+        Album_ = album_;
     }
 
-    public String getYear() {
-        return Year;
+    public String getYear_() {
+        return Year_;
     }
 
-    public void setYear(String year) {
-        Year = year;
+    public void setYear_(String year_) {
+        Year_ = year_;
     }
 
-    public String getComment() {
-        return Comment;
+    public String getComment_() {
+        return Comment_;
     }
 
-    public void setComment(String comment) {
-        Comment = comment;
+    public void setComment_(String comment_) {
+        Comment_ = comment_;
     }
 
-    public String getGenre() {
-        return Genre;
+    public String getGenre_() {
+        return Genre_;
     }
 
-    public void setGenre(String genre) {
-        Genre = genre;
+    public void setGenre_(String genre_) {
+        Genre_ = genre_;
     }
 
     public MP3File(File file) {
         try {
-            this.file = file;
+            this.file_ = file;
             TAGBody = getTAGBody(file);
             //因為Byte轉BIG5會有位元遺失，所以先把需要的段落複製出來，再轉換成String，得到需要的結果。
-            Tag = new String(Arrays.copyOfRange(TAGBody,Tag_Start,Tag_End),"BIG5").trim();
-            SongName = new String(Arrays.copyOfRange(TAGBody,SongName_Start,SongName_End),"BIG5").trim();
-            Artist = new String(Arrays.copyOfRange(TAGBody,Artist_Start,Artist_End),"BIG5").trim();
-            Album = new String(Arrays.copyOfRange(TAGBody,Album_Start,Album_End),"BIG5").trim();
-            Year = new String(Arrays.copyOfRange(TAGBody,Year_Start,Year_End),"BIG5").trim();
-            Comment = new String(Arrays.copyOfRange(TAGBody,Comment_Start,Comment_End),"BIG5").trim();
-            Genre = new String(Arrays.copyOfRange(TAGBody,Genre_Start,Genre_End),"BIG5").trim();
+            Tag_ = new String(Arrays.copyOfRange(TAGBody, TAG_START, TAG_END),"BIG5").trim();
+            SongName_ = new String(Arrays.copyOfRange(TAGBody, SONG_NAME_START, SONG_NAME_END),"BIG5").trim();
+            Artist_ = new String(Arrays.copyOfRange(TAGBody, ARTIST_START, ARTIST_END),"BIG5").trim();
+            Album_ = new String(Arrays.copyOfRange(TAGBody, ALBUM_START, ALBUM_END),"BIG5").trim();
+            Year_ = new String(Arrays.copyOfRange(TAGBody, YEAR_START, YEAR_END),"BIG5").trim();
+            Comment_ = new String(Arrays.copyOfRange(TAGBody, COMMENT_START, COMMENT_END),"BIG5").trim();
+            Genre_ = new String(Arrays.copyOfRange(TAGBody, GENRE_START, GENRE_END),"BIG5").trim();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -153,10 +158,10 @@ class MP3File {
         return tagBody;
     }
 
-    public void save(){
+    public void save(String destDir){
         try{
             modifyTAGBody();
-            writeFile();
+            writeFile(destDir);
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -164,13 +169,13 @@ class MP3File {
     }
 
     private void modifyTAGBody() throws Exception{
-        writeTagValueToTAGBody(SongName, SongName_Start,SongName_End);
-        writeTagValueToTAGBody(Artist, Artist_Start,Artist_End);
-        writeTagValueToTAGBody(SongName, SongName_Start,SongName_End);
-        writeTagValueToTAGBody(Album, Album_Start,Album_End);
-        writeTagValueToTAGBody(Year, Year_Start,Year_End);
-        writeTagValueToTAGBody(Comment, Comment_Start,Comment_End);
-        writeTagValueToTAGBody(Genre, Genre_Start,Genre_End);
+        writeTagValueToTAGBody(SongName_, SONG_NAME_START, SONG_NAME_END);
+        writeTagValueToTAGBody(Artist_, ARTIST_START, ARTIST_END);
+        writeTagValueToTAGBody(SongName_, SONG_NAME_START, SONG_NAME_END);
+        writeTagValueToTAGBody(Album_, ALBUM_START, ALBUM_END);
+        writeTagValueToTAGBody(Year_, YEAR_START, YEAR_END);
+        writeTagValueToTAGBody(Comment_, COMMENT_START, COMMENT_END);
+        writeTagValueToTAGBody(Genre_, GENRE_START, GENRE_END);
     }
 
     private void writeTagValueToTAGBody(String TAG, int startIndex, int EndIndex) throws Exception {
@@ -190,27 +195,24 @@ class MP3File {
         }
     }
 
-    public void writeFile()throws Exception{
+    public void writeFile(String destDir)throws Exception{
         InputStream is = null;
         OutputStream os = null;
         try{
-            is = new FileInputStream(file);
-            os = new FileOutputStream(new File(file.getParent()+"\\..\\output\\"+file.getName()));
+            is = new FileInputStream(file_);
+            os = new FileOutputStream(new File(destDir+"\\"+ file_.getName()));
             byte[] buffer = new byte[1024];
             int length;
             while ((length = is.read(buffer)) > 0){
                 //MP3的最後128byte是TAGBody，要算好會不會斷掉。
                 if(is.available()<128 && is.available() > 0){ //取代前半段
                     buffer=TAGBodyReplacePartOfBuffer(buffer, length,128-is.available());
-                    System.out.println("1");
                 }else{
                     if(length < 1024){
                         if(length >  128){ //取代整個
                             buffer=TAGBodyReplacePartOfBuffer(buffer, length,128);
-                            System.out.println("2");
                         }else{ //取代後半段
                             buffer=TAGBodyReplacePartOfBuffer(buffer, length,length);
-                            System.out.println("3");
                         }
                     }
                 }
